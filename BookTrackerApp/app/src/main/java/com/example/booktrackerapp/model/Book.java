@@ -19,16 +19,16 @@ public class Book {
     @ColumnInfo(name = "total_pages")
     private int totalPages;
 
-    @ColumnInfo(name = "cover_image_uri")
-    private String coverImageUri;
+    @ColumnInfo(name = "cover_image_path")
+    private String coverImagePath;
 
     // Constructor
-    public Book(String title, String author, int pagesRead, int totalPages, String coverImageUri) {
+    public Book(String title, String author, int pagesRead, int totalPages, String coverImagePath) {
         this.title = title;
         this.author = author;
         this.pagesRead = pagesRead;
         this.totalPages = totalPages;
-        this.coverImageUri = coverImageUri;
+        this.coverImagePath = coverImagePath;
     }
 
     // Getters and Setters
@@ -57,8 +57,8 @@ public class Book {
         return totalPages;
     }
 
-    public String getCoverImageUri() {
-        return coverImageUri;
+    public String getCoverImagePath() {
+        return coverImagePath;
     }
 
     public void setTitle(String title) {
@@ -77,8 +77,8 @@ public class Book {
         this.totalPages = totalPages;
     }
 
-    public void setCoverImageUri(String coverImageUri) {
-        this.coverImageUri = coverImageUri;
+    public void setCoverImagePath(String coverImagePath) {
+        this.coverImagePath = coverImagePath;
     }
 
 }

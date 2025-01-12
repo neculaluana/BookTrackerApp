@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.booktrackerapp.dao.BookDao;
 import com.example.booktrackerapp.model.Book;
 
-@Database(entities = {Book.class}, version = 1)
+@Database(entities = {Book.class}, version = 2)
 public abstract class BookDatabase extends RoomDatabase {
 
     private static BookDatabase instance; // Singleton instance

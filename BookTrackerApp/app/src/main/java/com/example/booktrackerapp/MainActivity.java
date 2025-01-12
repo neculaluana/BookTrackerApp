@@ -86,18 +86,18 @@ public class MainActivity extends AppCompatActivity {
             String author = data.getStringExtra("author");
             int pagesRead = data.getIntExtra("pages_read", 0);
             int totalPages = data.getIntExtra("total_pages", 0);
-            String coverImageUri = data.getStringExtra("cover_image_uri");
+            String coverImagePath = data.getStringExtra("cover_image_path");
 
             if (requestCode == ADD_BOOK_REQUEST) {
                 // Adding a new book
-                Book book = new Book(title, author, pagesRead, totalPages, coverImageUri);
+                Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
                 bookViewModel.insert(book);
                 Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
             } else if (requestCode == EDIT_BOOK_REQUEST) {
                 // Updating an existing book
                 int id = data.getIntExtra("book_id", -1);
                 if (id != -1) {
-                    Book book = new Book(title, author, pagesRead, totalPages, coverImageUri);
+                    Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
                     book.setId(id);
                     bookViewModel.update(book);
                     Toast.makeText(this, "Book updated", Toast.LENGTH_SHORT).show();

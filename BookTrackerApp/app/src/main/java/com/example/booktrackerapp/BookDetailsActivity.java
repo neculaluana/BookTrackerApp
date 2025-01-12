@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
 
 public class BookDetailsActivity extends AppCompatActivity {
@@ -66,10 +67,10 @@ public class BookDetailsActivity extends AppCompatActivity {
                     progressBar.setProgress(progress);
 
                     // Load image
-                    String imageUri = book.getCoverImageUri();
-                    if (imageUri != null && !imageUri.isEmpty()) {
+                    String imagePath = book.getCoverImagePath();
+                    if (imagePath != null && !imagePath.isEmpty()) {
                         Glide.with(BookDetailsActivity.this)
-                                .load(Uri.parse(imageUri))
+                                .load(new File(imagePath))
                                 .placeholder(R.drawable.ic_book_placeholder)
                                 .into(imageViewCover);
                     } else {
@@ -93,7 +94,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                     editIntent.putExtra("author", currentBook.getAuthor());
                     editIntent.putExtra("pages_read", currentBook.getPagesRead());
                     editIntent.putExtra("total_pages", currentBook.getTotalPages());
-                    editIntent.putExtra("cover_image_uri", currentBook.getCoverImageUri());
+                    editIntent.putExtra("cover_image_path", currentBook.getCoverImagePath());
                     startActivityForResult(editIntent, EDIT_BOOK_REQUEST);
                 }
             }

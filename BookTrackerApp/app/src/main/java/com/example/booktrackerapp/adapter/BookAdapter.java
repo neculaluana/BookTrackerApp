@@ -14,6 +14,7 @@ import com.example.booktrackerapp.model.Book;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
         private ImageView imageViewCover;
         private TextView textViewTitle;
         private TextView textViewAuthor;
+        private TextView textViewProgress;
         private ProgressBar progressBar;
 
         public BookHolder(View itemView) {
@@ -36,7 +38,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
             textViewTitle = itemView.findViewById(R.id.text_view_title);
             textViewAuthor = itemView.findViewById(R.id.text_view_author);
             progressBar = itemView.findViewById(R.id.progress_bar);
-
+            textViewProgress = itemView.findViewById(R.id.text_view_progress);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -65,15 +67,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
         // Bind data to views
         holder.textViewTitle.setText(currentBook.getTitle());
         holder.textViewAuthor.setText(currentBook.getAuthor());
+        holder.textViewProgress.setText("Pages read: " + currentBook.getPagesRead() + "/" + currentBook.getTotalPages());
 
         int progress = (int) ((double) currentBook.getPagesRead() / currentBook.getTotalPages() * 100);
         holder.progressBar.setProgress(progress);
 
         // Load image using Glide
-        String imageUri = currentBook.getCoverImageUri();
-        if (imageUri != null) {
+        String imagePath = currentBook.getCoverImagePath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imageFile = new File(imagePath);
             Glide.with(holder.itemView.getContext())
-                    .load(imageUri)
+                    .load(imageFile)
                     .placeholder(R.drawable.ic_book_placeholder)
                     .into(holder.imageViewCover);
         } else {

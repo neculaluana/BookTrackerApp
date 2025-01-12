@@ -14,6 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class AddEditBookActivity extends AppCompatActivity {
 
@@ -23,7 +30,7 @@ public class AddEditBookActivity extends AppCompatActivity {
     private ImageView imageViewCover;
     private Button buttonSaveBook;
 
-    private Uri coverImageUri;
+    private String coverImagePath;
     private int bookId = -1;
 
     @Override
@@ -64,10 +71,12 @@ public class AddEditBookActivity extends AppCompatActivity {
             editTextAuthor.setText(intent.getStringExtra("author"));
             editTextPagesRead.setText(String.valueOf(intent.getIntExtra("pages_read", 0)));
             editTextTotalPages.setText(String.valueOf(intent.getIntExtra("total_pages", 0)));
-            String imageUriString = intent.getStringExtra("cover_image_uri");
-            if (imageUriString != null && !imageUriString.isEmpty()) {
-                coverImageUri = Uri.parse(imageUriString);
-                Glide.with(this).load(coverImageUri).into(imageViewCover);
+            coverImagePath = intent.getStringExtra("cover_image_path");
+            if (coverImagePath != null && !coverImagePath.isEmpty()) {
+                Glide.with(this)
+                        .load(new File(coverImagePath))
+                        .placeholder(R.drawable.ic_book_placeholder)
+                        .into(imageViewCover);
             } else {
                 imageViewCover.setImageResource(R.drawable.ic_book_placeholder);
             }
@@ -92,9 +101,51 @@ public class AddEditBookActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
 
-            coverImageUri = data.getData();
-            Glide.with(this).load(coverImageUri).into(imageViewCover);
+            Uri imageUri = data.getData();
+            try {
+                // Save the image to internal storage
+                String imagePath = saveImageToInternalStorage(imageUri);
+                // Set the image path to the coverImagePath variable
+                coverImagePath = imagePath;
+
+                // Load the image into the ImageView
+                Glide.with(this)
+                        .load(new File(imagePath))
+                        .placeholder(R.drawable.ic_book_placeholder)
+                        .into(imageViewCover);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+    private String saveImageToInternalStorage(Uri imageUri) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+        if (inputStream == null) {
+            throw new IOException("Unable to open input stream from URI");
+        }
+
+        // Create an images directory in internal storage
+        File imagesDir = new File(getFilesDir(), "images");
+        if (!imagesDir.exists()) {
+            imagesDir.mkdir();
+        }
+
+        // Create a unique file name
+        String fileName = "book_" + System.currentTimeMillis() + ".jpg";
+        File imageFile = new File(imagesDir, fileName);
+
+        OutputStream outputStream = new FileOutputStream(imageFile);
+
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.close();
+        inputStream.close();
+
+        return imageFile.getAbsolutePath();
     }
 
     private void saveBook() {
@@ -125,7 +176,7 @@ public class AddEditBookActivity extends AppCompatActivity {
         data.putExtra("author", author);
         data.putExtra("pages_read", pagesRead);
         data.putExtra("total_pages", totalPages);
-        data.putExtra("cover_image_uri", coverImageUri != null ? coverImageUri.toString() : null);
+        data.putExtra("cover_image_path", coverImagePath);
 
         if (bookId != -1) {
             data.putExtra("book_id", bookId);
