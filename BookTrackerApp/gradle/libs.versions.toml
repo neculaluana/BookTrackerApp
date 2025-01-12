@@ -9,9 +9,10 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 
 [libraries]
-compiler = { module = "com.github.bumptech.glide:compiler" }
+compiler = { module = "com.github.bumptech.glide:compiler", version = "4.16.0" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version = "2.11.0" }
 glide = { module = "com.github.bumptech.glide:glide", version = "4.16.0" }
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version = "4.16.0" }
 google-material = { module = "com.google.android.material:material" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
