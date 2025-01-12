@@ -39,6 +39,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
             textViewAuthor = itemView.findViewById(R.id.text_view_author);
             progressBar = itemView.findViewById(R.id.progress_bar);
             textViewProgress = itemView.findViewById(R.id.text_view_progress);
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -68,7 +70,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
         holder.textViewTitle.setText(currentBook.getTitle());
         holder.textViewAuthor.setText(currentBook.getAuthor());
         holder.textViewProgress.setText("Pages read: " + currentBook.getPagesRead() + "/" + currentBook.getTotalPages());
-
+        holder.progressBar.setIndeterminate(false);
         int progress = (int) ((double) currentBook.getPagesRead() / currentBook.getTotalPages() * 100);
         holder.progressBar.setProgress(progress);
 

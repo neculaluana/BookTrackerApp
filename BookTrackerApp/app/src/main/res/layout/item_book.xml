@@ -1,4 +1,5 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_book"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -43,19 +44,26 @@
                 android:text="Author"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            <!-- ProgressBar -->
-            <ProgressBar
+            <!-- LinearProgressIndicator -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress_bar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:progress="0" />
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:trackThickness="8dp"
+                app:trackColor="?attr/colorSurfaceVariant"
+                app:indicatorColor="?attr/colorPrimary"
+                app:indicatorDirectionLinear="leftToRight"
+                app:trackCornerRadius="8dp" />
+
+
             <!-- Read Pages -->
             <TextView
                 android:id="@+id/text_view_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Progress"
+                android:text="Pages read: 0/500"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         </LinearLayout>

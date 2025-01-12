@@ -44,7 +44,6 @@ dependencies {
     annotationProcessor libs.glide.compiler
     annotationProcessor libs.compiler
     implementation libs.recyclerview
-    implementation libs.google.material
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.lifecycle.extensions

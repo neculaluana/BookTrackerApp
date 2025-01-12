@@ -1,25 +1,43 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_main"
+    <!-- Header Text for Branding -->
+    <TextView
+        android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:title="Book Tracker"
-        android:titleTextColor="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:text="Your Reading List"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:gravity="center"
+        android:textColor="?attr/colorPrimary" />
 
-    <!-- RecyclerView -->
+    <!-- RecyclerView with Padding -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_books"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="56dp"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+    <!-- Empty View for When No Data is Present -->
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="No books added yet!"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <!-- FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,6 +47,9 @@
         android:contentDescription="Add Book"
         android:src="@drawable/ic_add"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        app:layout_anchorGravity="bottom|end"
+        app:backgroundTint="?attr/colorPrimaryContainer"
+        app:tint="?attr/colorOnPrimaryContainer" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
