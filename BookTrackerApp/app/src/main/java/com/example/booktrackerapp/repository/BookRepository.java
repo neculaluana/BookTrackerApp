@@ -41,6 +41,9 @@ public class BookRepository {
     public LiveData<List<Book>> getAllBooks() {
         return allBooks;
     }
+    public LiveData<Book> getBookById(int bookId) {
+        return bookDao.getBookById(bookId);
+    }
 
     // AsyncTasks for database operations
 

@@ -24,6 +24,7 @@ public class AddEditBookActivity extends AppCompatActivity {
     private Button buttonSaveBook;
 
     private Uri coverImageUri;
+    private int bookId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,26 @@ public class AddEditBookActivity extends AppCompatActivity {
                 saveBook();
             }
         });
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("book_id")) {
+            setTitle("Edit Book");
+
+            bookId = intent.getIntExtra("book_id", -1);
+            editTextTitle.setText(intent.getStringExtra("title"));
+            editTextAuthor.setText(intent.getStringExtra("author"));
+            editTextPagesRead.setText(String.valueOf(intent.getIntExtra("pages_read", 0)));
+            editTextTotalPages.setText(String.valueOf(intent.getIntExtra("total_pages", 0)));
+            String imageUriString = intent.getStringExtra("cover_image_uri");
+            if (imageUriString != null && !imageUriString.isEmpty()) {
+                coverImageUri = Uri.parse(imageUriString);
+                Glide.with(this).load(coverImageUri).into(imageViewCover);
+            } else {
+                imageViewCover.setImageResource(R.drawable.ic_book_placeholder);
+            }
+        } else {
+            setTitle("Add Book");
+        }
     }
 
     private void openImageChooser() {
@@ -106,6 +127,9 @@ public class AddEditBookActivity extends AppCompatActivity {
         data.putExtra("total_pages", totalPages);
         data.putExtra("cover_image_uri", coverImageUri != null ? coverImageUri.toString() : null);
 
+        if (bookId != -1) {
+            data.putExtra("book_id", bookId);
+        }
         setResult(RESULT_OK, data);
         finish();
     }

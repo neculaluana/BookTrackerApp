@@ -43,4 +43,9 @@ public class BookViewModel extends AndroidViewModel {
     public LiveData<List<Book>> getAllBooks() {
         return allBooks;
     }
+
+    public LiveData<Book> getBookById(int bookId) {
+        return repository.getBookById(bookId);
+    }
+
 }

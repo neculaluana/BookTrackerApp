@@ -23,6 +23,8 @@
         </activity>
         <!-- AddEditBookActivity -->
         <activity android:name=".AddEditBookActivity" />
+        <!-- BookDetailsActivity -->
+        <activity android:name=".BookDetailsActivity"/>
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_BOOK_REQUEST = 1;
+    public static final int EDIT_BOOK_REQUEST = 2;
 
     private BookViewModel bookViewModel;
     private RecyclerView recyclerView;
@@ -68,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new BookAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-
+                Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+                intent.putExtra("book_id", book.getId());
+                startActivity(intent);
             }
         });
 
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     // Handle result from AddEditBookActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_BOOK_REQUEST && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             // Get data from intent
             String title = data.getStringExtra("title");
             String author = data.getStringExtra("author");
@@ -85,11 +88,23 @@ public class MainActivity extends AppCompatActivity {
             int totalPages = data.getIntExtra("total_pages", 0);
             String coverImageUri = data.getStringExtra("cover_image_uri");
 
-            Book book = new Book(title, author, pagesRead, totalPages, coverImageUri);
-            bookViewModel.insert(book);
-
-            Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
-
+            if (requestCode == ADD_BOOK_REQUEST) {
+                // Adding a new book
+                Book book = new Book(title, author, pagesRead, totalPages, coverImageUri);
+                bookViewModel.insert(book);
+                Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
+            } else if (requestCode == EDIT_BOOK_REQUEST) {
+                // Updating an existing book
+                int id = data.getIntExtra("book_id", -1);
+                if (id != -1) {
+                    Book book = new Book(title, author, pagesRead, totalPages, coverImageUri);
+                    book.setId(id);
+                    bookViewModel.update(book);
+                    Toast.makeText(this, "Book updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Book not updated", Toast.LENGTH_SHORT).show();
+                }
+            }
         } else {
             Toast.makeText(this, "Book not saved", Toast.LENGTH_SHORT).show();
         }

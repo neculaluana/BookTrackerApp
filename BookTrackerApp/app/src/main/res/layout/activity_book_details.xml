@@ -1,0 +1,65 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_view_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Book Cover -->
+        <ImageView
+            android:id="@+id/image_view_detail_cover"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:contentDescription="Book Cover"
+            android:src="@drawable/ic_book_placeholder"
+            android:layout_gravity="center" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/text_view_detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginTop="16dp" />
+
+        <!-- Author -->
+        <TextView
+            android:id="@+id/text_view_detail_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Author"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <!-- Reading Progress -->
+        <TextView
+            android:id="@+id/text_view_detail_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Progress"
+            android:layout_marginTop="8dp" />
+
+        <!-- ProgressBar -->
+        <ProgressBar
+            android:id="@+id/progress_bar_detail"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="50" />
+
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/button_edit_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Book"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>
