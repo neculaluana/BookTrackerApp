@@ -5,10 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.example.booktrackerapp.model.Book;
+import com.example.booktrackerapp.viewmodel.BookViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +28,7 @@ import java.io.OutputStream;
 public class AddEditBookActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-
+    private BookViewModel bookViewModel;
     private EditText editTextTitle, editTextAuthor, editTextPagesRead, editTextTotalPages;
     private ImageView imageViewCover;
     private Button buttonSaveBook;
@@ -37,6 +40,7 @@ public class AddEditBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_book);
+        bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
         // Initialize views
         editTextTitle = findViewById(R.id.edit_text_title);
@@ -170,18 +174,19 @@ public class AddEditBookActivity extends AppCompatActivity {
             return;
         }
 
-        // Prepare data to send back to MainActivity
-        Intent data = new Intent();
-        data.putExtra("title", title);
-        data.putExtra("author", author);
-        data.putExtra("pages_read", pagesRead);
-        data.putExtra("total_pages", totalPages);
-        data.putExtra("cover_image_path", coverImagePath);
-
         if (bookId != -1) {
-            data.putExtra("book_id", bookId);
+            // Editing an existing book
+            Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
+            book.setId(bookId);
+            bookViewModel.update(book);
+            Toast.makeText(this, "Book updated", Toast.LENGTH_SHORT).show();
+        } else {
+            // Adding a new book
+            Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
+            bookViewModel.insert(book);
+            Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
         }
-        setResult(RESULT_OK, data);
+
         finish();
     }
 }

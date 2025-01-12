@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     // Handle result from AddEditBookActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && data != null) {
             // Get data from intent
             String title = data.getStringExtra("title");
             String author = data.getStringExtra("author");
@@ -93,17 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
                 bookViewModel.insert(book);
                 Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
-            } else if (requestCode == EDIT_BOOK_REQUEST) {
-                // Updating an existing book
-                int id = data.getIntExtra("book_id", -1);
-                if (id != -1) {
-                    Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
-                    book.setId(id);
-                    bookViewModel.update(book);
-                    Toast.makeText(this, "Book updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Book not updated", Toast.LENGTH_SHORT).show();
-                }
             }
         } else {
             Toast.makeText(this, "Book not saved", Toast.LENGTH_SHORT).show();
