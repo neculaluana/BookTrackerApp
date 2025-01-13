@@ -32,6 +32,7 @@ public class AddEditBookActivity extends AppCompatActivity {
     private EditText editTextTitle, editTextAuthor, editTextPagesRead, editTextTotalPages;
     private ImageView imageViewCover;
     private Button buttonSaveBook;
+    private Button buttonUploadCover;
 
     private String coverImagePath;
     private int bookId = -1;
@@ -49,9 +50,10 @@ public class AddEditBookActivity extends AppCompatActivity {
         editTextTotalPages = findViewById(R.id.edit_text_total_pages);
         imageViewCover = findViewById(R.id.image_view_cover);
         buttonSaveBook = findViewById(R.id.button_save_book);
+        buttonUploadCover = findViewById(R.id.button_upload_cover);
 
         // Image selection
-        imageViewCover.setOnClickListener(new View.OnClickListener() {
+        buttonUploadCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openImageChooser();

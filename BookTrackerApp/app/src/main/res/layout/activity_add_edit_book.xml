@@ -10,48 +10,82 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Book Cover -->
+        <!-- Book Cover ImageView -->
         <ImageView
             android:id="@+id/image_view_cover"
             android:layout_width="150dp"
             android:layout_height="200dp"
             android:contentDescription="Book Cover"
             android:src="@drawable/ic_book_placeholder"
+            android:layout_gravity="center" />
+
+        <!-- Upload Photo Button -->
+        <Button
+            android:id="@+id/button_upload_cover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Photo"
             android:layout_gravity="center"
-            android:clickable="true"
-            android:focusable="true" />
+            android:layout_marginTop="8dp" />
 
         <!-- Title Input -->
-        <EditText
-            android:id="@+id/edit_text_title"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
-            android:inputType="text" />
+            android:hint="Title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Author Input -->
-        <EditText
-            android:id="@+id/edit_text_author"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Author"
-            android:inputType="text" />
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Total Pages Input -->
-        <EditText
-            android:id="@+id/edit_text_total_pages"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_total_pages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Total Pages"
-            android:inputType="number" />
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_total_pages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Pages Read Input -->
-        <EditText
-            android:id="@+id/edit_text_pages_read"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_pages_read"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Pages Read"
-            android:inputType="number" />
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_pages_read"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Save Button -->
         <Button
@@ -59,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save Book"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
 

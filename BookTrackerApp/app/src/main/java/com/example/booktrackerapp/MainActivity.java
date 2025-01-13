@@ -17,6 +17,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,18 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.List;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.example.booktrackerapp.model.Quote;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_BOOK_REQUEST = 1;
@@ -44,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private BookAdapter adapter;
     private FloatingActionButton buttonAddBook;
     private Button buttonTestNotification;
+    private TextView textViewQuote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Views
         recyclerView = findViewById(R.id.recycler_view_books);
         buttonAddBook = findViewById(R.id.button_add_book);
+        textViewQuote = findViewById(R.id.text_view_quote);
 
         // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Fetch and display the quote
+        fetchQuote();
+
+        // Check and request notification permission
         requestNotificationPermission();
 
         // Check and request permission for exact alarms
@@ -227,6 +247,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void fetchQuote() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            OkHttpClient client = new OkHttpClient();
+
+            String apiKey = BuildConfig.API_KEY;
+            String url = "https://api.api-ninjas.com/v1/quotes";
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("X-Api-Key", apiKey)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+
+                    Gson gson = new Gson();
+                    List<Quote> quotes = gson.fromJson(responseBody, new TypeToken<List<Quote>>(){}.getType());
+
+                    if (quotes != null && !quotes.isEmpty()) {
+                        Quote quote = quotes.get(0);
+                        // Update the UI on the main thread
+                        runOnUiThread(() -> displayQuote(quote));
+                    }
+                } else {
+                    Log.e("MainActivity", "Server returned error: " + response.code());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void displayQuote(Quote quote) {
+        String quoteText = "\"" + quote.getQuote() + "\"\n\n- " + quote.getAuthor();
+        textViewQuote.setText(quoteText);
+    }
 
     // Handle result from AddEditBookActivity
     @Override

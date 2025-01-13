@@ -1,10 +1,16 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_book"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="4dp">
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:strokeColor="?attr/colorPrimaryVariant"
+    app:strokeWidth="1dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:rippleColor="?attr/colorControlHighlight">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,45 +35,47 @@
             android:orientation="vertical">
 
             <!-- Title -->
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Book Title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <!-- Author -->
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_author"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Author"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <!-- LinearProgressIndicator -->
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
                 app:trackThickness="8dp"
                 app:trackColor="?attr/colorSurfaceVariant"
                 app:indicatorColor="?attr/colorPrimary"
-                app:indicatorDirectionLinear="leftToRight"
-                app:trackCornerRadius="8dp" />
-
+                app:trackCornerRadius="0dp" />
 
             <!-- Read Pages -->
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_progress"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Pages read: 0/500"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:layout_marginTop="4dp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

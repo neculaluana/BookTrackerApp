@@ -1,8 +1,19 @@
+
 plugins {
     alias(libs.plugins.android.application)
 }
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def apiKey = localProperties.getProperty('apiKey')
 
 android {
+    android.buildFeatures.buildConfig true
     namespace 'com.example.booktrackerapp'
     compileSdk 34
 
@@ -14,6 +25,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", "\"${apiKey}\""
     }
 
     buildTypes {
@@ -48,5 +60,7 @@ dependencies {
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.lifecycle.extensions
+    implementation libs.okhttp
+    implementation libs.gson
 
 }

@@ -1,65 +1,144 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll_view_details"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- App Bar with MaterialToolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_book_details"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:title="Book Details"
+        android:titleTextColor="@android:color/white"
+        app:layout_scrollFlags="scroll|enterAlways" />
+
+    <!-- ScrollView containing book details -->
+    <ScrollView
+        android:id="@+id/scroll_view_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_book_details"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- MaterialCardView for Book Details -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view_book_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Book Cover -->
+                    <ImageView
+                        android:id="@+id/image_view_detail_cover"
+                        android:layout_width="200dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center_horizontal"
+                        android:contentDescription="Book Cover"
+                        android:src="@drawable/ic_book_placeholder" />
+
+                    <!-- Title -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_view_detail_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Title"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:layout_marginTop="16dp" />
+
+                    <!-- Author -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_view_detail_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Author"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+                    <!-- Reading Progress -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_view_detail_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Progress"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- LinearProgressIndicator -->
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_bar_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        app:trackThickness="8dp"
+                        app:trackColor="?attr/colorSurfaceVariant"
+                        app:indicatorColor="?attr/colorPrimary"
+                        app:trackCornerRadius="0dp" />
+
+                    <!-- Update Progress Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_update_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Update Progress"
+                        android:layout_marginTop="16dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- LinearLayout for buttons at the bottom -->
     <LinearLayout
-        android:id="@+id/linear_layout_details"
+        android:id="@+id/linear_layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:padding="8dp">
 
-        <!-- Book Cover -->
-        <ImageView
-            android:id="@+id/image_view_detail_cover"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:contentDescription="Book Cover"
-            android:src="@drawable/ic_book_placeholder"
-            android:layout_gravity="center" />
-
-        <!-- Title -->
-        <TextView
-            android:id="@+id/text_view_detail_title"
-            android:layout_width="wrap_content"
+        <!-- Delete Book Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete_book"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_marginTop="16dp" />
-
-        <!-- Author -->
-        <TextView
-            android:id="@+id/text_view_detail_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Author"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <!-- Reading Progress -->
-        <TextView
-            android:id="@+id/text_view_detail_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Progress"
-            android:layout_marginTop="8dp" />
-
-        <!-- ProgressBar -->
-        <ProgressBar
-            android:id="@+id/progress_bar_detail"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:progress="50" />
+            android:text="Delete Book"
+            android:backgroundTint="?attr/colorError"
+            android:layout_marginEnd="4dp"
+            />
 
         <!-- Edit Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_edit_book"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Edit Book"
-            android:layout_marginTop="16dp" />
+            android:text="Edit Book Details"
+            android:layout_marginStart="4dp"
+            />
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
