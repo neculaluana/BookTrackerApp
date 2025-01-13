@@ -7,6 +7,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+firebaseInappmessaging = "21.0.1"
 
 [libraries]
 com-google-android-material-material = { module = "com.google.android.material:material" }
@@ -28,6 +29,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version = "2.11.0" }
 room-common = { module = "androidx.room:room-common", version = "2.6.1" }
 room-compiler = { module = "androidx.room:room-compiler", version = "2.6.1" }
 room-runtime = { module = "androidx.room:room-runtime", version = "2.6.1" }
+firebase-inappmessaging = { group = "com.google.firebase", name = "firebase-inappmessaging", version.ref = "firebaseInappmessaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
