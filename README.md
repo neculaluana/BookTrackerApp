@@ -46,7 +46,7 @@ An Android app to track your reading progress and manage your book list.
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/BookTrackerApp.git
+   git clone https://github.com/neculaluana/BookTrackerApp.git
    ```
 2. **Open in Android Studio and sync Gradle**.
 3. **Configure API Key**:
