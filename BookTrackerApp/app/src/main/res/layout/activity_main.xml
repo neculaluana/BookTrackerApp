@@ -30,6 +30,30 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Search Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search by Title or Author"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Search Button -->
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:layout_margin="16dp"
+            android:layout_gravity="center_horizontal" />
         <!-- Quote Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_view_quote"
@@ -82,9 +106,9 @@
         android:layout_height="wrap_content"
         android:text="Test Notification"
         android:layout_margin="16dp"
-        android:layout_gravity="bottom|start"/>
-<!--        android:visibility="invisible"-->
-<!--        android:clickable="false"-->
+        android:layout_gravity="bottom|start"
+        android:visibility="invisible"
+        android:clickable="false"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class AddEditBookActivity extends AppCompatActivity {
 
@@ -88,6 +96,25 @@ public class AddEditBookActivity extends AppCompatActivity {
             }
         } else {
             setTitle("Add Book");
+            String title = intent.getStringExtra("search_title");
+            String author = intent.getStringExtra("search_author");
+            String coverId = intent.getStringExtra("search_cover_id");
+
+            editTextTitle.setText(title != null ? title : "");
+            editTextAuthor.setText(author != null ? author : "");
+
+            if (coverId != null && !coverId.isEmpty()) {
+                String coverUrl = "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
+                Glide.with(this)
+                        .load(coverUrl)
+                        .placeholder(R.drawable.ic_book_placeholder)
+                        .into(imageViewCover);
+
+                // Save URL to coverImagePath or handle accordingly
+                coverImagePath = coverUrl;
+            } else {
+                imageViewCover.setImageResource(R.drawable.ic_book_placeholder);
+            }
         }
     }
 
@@ -176,6 +203,27 @@ public class AddEditBookActivity extends AppCompatActivity {
             return;
         }
 
+
+        if (coverImagePath != null && coverImagePath.startsWith("http")) {
+            // Download the image asynchronously
+            downloadAndSaveImage(coverImagePath, new OnImageDownloadedListener() {
+                @Override
+                public void onImageDownloaded(String imagePath) {
+                    coverImagePath = imagePath; // Update the path to the saved image
+                    saveBookToDatabase(title, author, pagesRead, totalPages, coverImagePath);
+                }
+
+                @Override
+                public void onImageDownloadFailed(Exception e) {
+                    Toast.makeText(AddEditBookActivity.this, "Failed to save cover image", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            saveBookToDatabase(title, author, pagesRead, totalPages, coverImagePath);
+        }
+    }
+
+    private void saveBookToDatabase(String title, String author, int pagesRead, int totalPages, String coverImagePath) {
         if (bookId != -1) {
             // Editing an existing book
             Book book = new Book(title, author, pagesRead, totalPages, coverImagePath);
@@ -188,7 +236,61 @@ public class AddEditBookActivity extends AppCompatActivity {
             bookViewModel.insert(book);
             Toast.makeText(this, "Book saved", Toast.LENGTH_SHORT).show();
         }
-
         finish();
+    }
+
+    private void downloadAndSaveImage(String imageUrl, OnImageDownloadedListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            try {
+                // Download the image using OkHttp
+                OkHttpClient client = new OkHttpClient();
+
+                Request request = new Request.Builder()
+                        .url(imageUrl)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to download image: " + response);
+                }
+
+                InputStream inputStream = response.body().byteStream();
+
+                // Save the image to internal storage
+                File imagesDir = new File(getFilesDir(), "images");
+                if (!imagesDir.exists()) {
+                    imagesDir.mkdir();
+                }
+
+                String fileName = "book_" + System.currentTimeMillis() + ".jpg";
+                File imageFile = new File(imagesDir, fileName);
+
+                OutputStream outputStream = new FileOutputStream(imageFile);
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                outputStream.close();
+                inputStream.close();
+
+                String savedImagePath = imageFile.getAbsolutePath();
+
+                // Return to the main thread to update UI
+                handler.post(() -> listener.onImageDownloaded(savedImagePath));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                handler.post(() -> listener.onImageDownloadFailed(e));
+            }
+        });
+    }
+
+    public interface OnImageDownloadedListener {
+        void onImageDownloaded(String imagePath);
+        void onImageDownloadFailed(Exception e);
     }
 }

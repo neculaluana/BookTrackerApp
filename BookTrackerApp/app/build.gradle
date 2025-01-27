@@ -62,5 +62,7 @@ dependencies {
     implementation libs.lifecycle.extensions
     implementation libs.okhttp
     implementation libs.gson
+    implementation libs.logging.interceptor
+
 
 }

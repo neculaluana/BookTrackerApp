@@ -5,18 +5,24 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.example.booktrackerapp.adapter.BookAdapter;
 import com.example.booktrackerapp.model.Book;
+import com.example.booktrackerapp.model.BookResult;
+import com.example.booktrackerapp.model.OpenLibraryResponse;
 import com.example.booktrackerapp.viewmodel.BookViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -33,6 +39,8 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -47,11 +55,11 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_BOOK_REQUEST = 1;
-    public static final int EDIT_BOOK_REQUEST = 2;
 
     private BookViewModel bookViewModel;
     private RecyclerView recyclerView;
@@ -59,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton buttonAddBook;
     private Button buttonTestNotification;
     private TextView textViewQuote;
+    private EditText editTextSearch;
+    private Button buttonSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +122,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendTestNotification();
+            }
+        });
+
+        editTextSearch = findViewById(R.id.edit_text_search);
+        buttonSearch = findViewById(R.id.button_search);
+
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String query = editTextSearch.getText().toString().trim();
+                if (!query.isEmpty()) {
+                    searchBooks(query);
+                }
             }
         });
 
@@ -187,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the time
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 2);
-        calendar.set(Calendar.MINUTE, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 10);
         calendar.set(Calendar.SECOND, 0);
         Log.d("AlarmTest", "Alarm set for: " + calendar.getTime());
         // If the time is in the past, add one day
@@ -286,6 +309,81 @@ public class MainActivity extends AppCompatActivity {
         textViewQuote.setText(quoteText);
     }
 
+    private void searchBooks(String query) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build();
+
+            String url = "https://openlibrary.org/search.json?q=" + Uri.encode(query);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+
+                    // Parse JSON response
+                    Gson gson = new Gson();
+                    Type responseType = new TypeToken<OpenLibraryResponse>() {}.getType();
+                    OpenLibraryResponse searchResponse = gson.fromJson(responseBody, responseType);
+
+                    // Update UI on the main thread
+                    runOnUiThread(() -> displaySearchResults(searchResponse.docs));
+                } else {
+                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Search failed: " + response.code(), Toast.LENGTH_SHORT).show());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Network Error", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void displaySearchResults(List<BookResult> bookResults) {
+        if (bookResults == null || bookResults.isEmpty()) {
+            Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Search Results");
+
+        List<String> bookTitles = new ArrayList<>();
+        for (BookResult book : bookResults) {
+            String authors = book.author_name != null && !book.author_name.isEmpty() ? " by " + book.author_name.get(0) : "";
+            bookTitles.add(book.title + authors);
+        }
+
+        builder.setItems(bookTitles.toArray(new String[0]), (dialog, which) -> {
+            BookResult selectedBook = bookResults.get(which);
+            openAddEditBookWithPreFilledData(selectedBook);
+        });
+
+        builder.show();
+    }
+
+    private void openAddEditBookWithPreFilledData(BookResult book) {
+        Intent intent = new Intent(MainActivity.this, AddEditBookActivity.class);
+        intent.putExtra("search_title", book.title);
+
+        if (book.author_name != null && !book.author_name.isEmpty()) {
+            intent.putExtra("search_author", book.author_name.get(0));
+        }
+
+        if (book.cover_i != null) {
+            intent.putExtra("search_cover_id", book.cover_i);
+        }
+
+        startActivity(intent);
+    }
+
     // Handle result from AddEditBookActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -312,6 +410,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        editTextSearch.setText("");
+        editTextSearch.clearFocus();
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

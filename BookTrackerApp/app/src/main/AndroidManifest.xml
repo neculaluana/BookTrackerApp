@@ -27,6 +27,7 @@
         <activity android:name=".AddEditBookActivity" />
         <!-- BookDetailsActivity -->
         <activity android:name=".BookDetailsActivity"/>
+        <!-- ReminderBroadcast -->
         <receiver android:name=".ReminderBroadcast" />
     </application>
 
